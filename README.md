@@ -5,11 +5,16 @@ This is a project for querying product price information. It is a modular applic
 ## Requirements
 
 - **Java 21**
-- **Maven 3.9.9**
+- **Maven 3.9.9**(recommended to use Maven Wrapper)
+- **Spring Boot 4.x**
 
 ## Description
 
 This project follows the **Hexagonal Architecture** pattern, which allows for a clear separation of concerns between the domain and external interfaces (such as databases, APIs, etc.). The database used is **H2**, which is configured to store initial test data when the application is run.
+
+## Running the Application
+
+You can run the project using the **Maven Wrapper** (`mvnw`) to ensure consistent builds across environments:
 
 ## Setup
 
