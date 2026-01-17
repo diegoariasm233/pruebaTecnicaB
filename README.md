@@ -76,6 +76,5 @@ Response:
     "priceList": 2,
     "startDate": "2020-06-14T15:00:00",
     "endDate": "2020-06-14T18:30:00",
-    "price": 25.45,
-    "currency": "EUR"
+    "price": 25.45
 }

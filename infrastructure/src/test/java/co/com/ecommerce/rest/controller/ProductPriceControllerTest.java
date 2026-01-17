@@ -42,7 +42,7 @@ class ProductPriceControllerTest {
                 .expectBody(ProductPriceResponse.class)
                 .value(response -> {
                     assertNotNull(response);
-                    assertEquals(expectedPrice, response.getPrice());
+                    assertEquals(expectedPrice, response.price());
                 });
     }
 
@@ -60,7 +60,7 @@ class ProductPriceControllerTest {
                 .expectBody(ProductPriceResponse.class)
                 .value(response -> {
                     assertNotNull(response);
-                    assertEquals(BigDecimal.valueOf(25.45), response.getPrice());
+                    assertEquals(BigDecimal.valueOf(25.45), response.price());
                 });
     }
 
@@ -80,7 +80,7 @@ class ProductPriceControllerTest {
                 .expectBody(ProductPriceResponse.class)
                 .value(response -> {
                     assertNotNull(response);
-                    assertEquals(expectedPrice, response.getPrice());
+                    assertEquals(expectedPrice, response.price());
                 });
     }
 
@@ -100,7 +100,7 @@ class ProductPriceControllerTest {
                 .expectBody(ProductPriceResponse.class)
                 .value(response -> {
                     assertNotNull(response);
-                    assertEquals(expectedPrice, response.getPrice());
+                    assertEquals(expectedPrice, response.price());
                 });
     }
 
@@ -118,7 +118,7 @@ class ProductPriceControllerTest {
                 .expectBody(ProductPriceResponse.class)
                 .value(response -> {
                     assertNotNull(response);
-                    assertEquals(BigDecimal.valueOf(38.95), response.getPrice());
+                    assertEquals(BigDecimal.valueOf(38.95), response.price());
                 });
     }
 
