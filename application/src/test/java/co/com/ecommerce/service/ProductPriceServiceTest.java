@@ -43,12 +43,12 @@ class ProductPriceServiceTest {
 
         assertTrue(result.isPresent());
         Price response = result.get();
-        assertEquals(price.getProductId(), response.getProductId());
-        assertEquals(price.getBrand().getBrandId(), response.getBrand().getBrandId());
-        assertEquals(price.getPriceList(), response.getPriceList());
-        assertEquals(price.getPrice(), response.getPrice());
-        assertEquals(price.getStartDate(), response.getStartDate());
-        assertEquals(price.getEndDate(), response.getEndDate());
+        assertEquals(price.productId(), response.productId());
+        assertEquals(price.brand().brandId(), response.brand().brandId());
+        assertEquals(price.priceList(), response.priceList());
+        assertEquals(price.price(), response.price());
+        assertEquals(price.startDate(), response.startDate());
+        assertEquals(price.endDate(), response.endDate());
         verify(priceAdapterInterface).getApplicablePrice(applicationDate, productId, brandId);
     }
 

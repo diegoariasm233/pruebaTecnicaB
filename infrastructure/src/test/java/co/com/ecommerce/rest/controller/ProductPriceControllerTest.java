@@ -14,7 +14,6 @@ import java.math.RoundingMode;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.junit.jupiter.api.Assertions.assertFalse;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @AutoConfigureRestTestClient
@@ -22,7 +21,7 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 class ProductPriceControllerTest {
 
     @Autowired
-    private RestTestClient webTestClient;
+    private RestTestClient restTestClient;
 
     private final String url = "/api/v1/product-price";
 
@@ -30,7 +29,7 @@ class ProductPriceControllerTest {
     void testGetPriceForProduct_PriceFound10HrsDay14() {
         BigDecimal expectedPrice = BigDecimal.valueOf(35.50).setScale(2, RoundingMode.HALF_UP);
 
-        webTestClient.get()
+        restTestClient.get()
                 .uri(uriBuilder -> uriBuilder
                         .path(url)
                         .queryParam("applicationDate", "2020-06-14T10:00:00")
@@ -48,7 +47,7 @@ class ProductPriceControllerTest {
 
     @Test
     void testGetPriceForProduct_PriceFound16HrsDay14() {
-        webTestClient.get()
+        restTestClient.get()
                 .uri(uriBuilder -> uriBuilder
                         .path(url)
                         .queryParam("applicationDate", "2020-06-14T16:00:00")
@@ -68,7 +67,7 @@ class ProductPriceControllerTest {
     void testGetPriceForProduct_PriceFound21HrsDay14() {
         BigDecimal expectedPrice = BigDecimal.valueOf(35.50).setScale(2, RoundingMode.HALF_UP);
 
-        webTestClient.get()
+        restTestClient.get()
                 .uri(uriBuilder -> uriBuilder
                         .path(url)
                         .queryParam("applicationDate", "2020-06-14T21:00:00")
@@ -88,7 +87,7 @@ class ProductPriceControllerTest {
     void testGetPriceForProduct_PriceFound10HrsDay15() {
         BigDecimal expectedPrice = BigDecimal.valueOf(30.50).setScale(2, RoundingMode.HALF_UP);
 
-        webTestClient.get()
+        restTestClient.get()
                 .uri(uriBuilder -> uriBuilder
                         .path(url)
                         .queryParam("applicationDate", "2020-06-15T10:00:00")
@@ -106,7 +105,7 @@ class ProductPriceControllerTest {
 
     @Test
     void testGetPriceForProduct_PriceFound21HrsDay16() {
-        webTestClient.get()
+        restTestClient.get()
                 .uri(uriBuilder -> uriBuilder
                         .path(url)
                         .queryParam("applicationDate", "2020-06-16T21:00:00")
@@ -124,7 +123,7 @@ class ProductPriceControllerTest {
 
     @Test
     void testGetPriceForProduct_PriceNotFound21HrsDay16Ano21() {
-        webTestClient.get()
+        restTestClient.get()
                 .uri(uriBuilder -> uriBuilder
                         .path(url)
                         .queryParam("applicationDate", "2021-06-16T21:00:00")
@@ -141,7 +140,7 @@ class ProductPriceControllerTest {
 
     @Test
     void testGetPriceForProduct_InvalidParameters() {
-        webTestClient.get()
+        restTestClient.get()
                 .uri(uriBuilder -> uriBuilder
                         .path(url)
                         .queryParam("applicationDate", "")
@@ -153,29 +152,28 @@ class ProductPriceControllerTest {
                 .expectBody(String.class)
                 .value(body -> {
                     assertTrue(body.contains("\"error\":\"Validation Error\""));
-                    assertTrue(body.contains("\"productId\":\"Failed to convert property value of type"));
-                    assertTrue(body.contains("\"brandId\":\"Failed to convert property value of type"));
-                    assertTrue(body.contains("\"applicationDate\":\"Application Date cannot be null."));
+                    assertTrue(body.contains("\"productId\":\"Failed to convert value of type 'java.lang.String' to required type 'java.lang.Long'; For input string: \\\"35455a\\\"\""));
+                    assertTrue(body.contains("\"brandId\":\"Failed to convert value of type 'java.lang.String' to required type 'java.lang.Long'; For input string: \\\"1a\\\"\""));
                 });
     }
 
     @Test
     void testGetPriceForProduct_Invalid2Parameters() {
-        webTestClient.get()
+        restTestClient.get()
                 .uri(uriBuilder -> uriBuilder
                         .path(url)
-                        .queryParam("applicationDate", "2021-06-1621:00:00")
-                        .queryParam("productId", 35455)
-                        .queryParam("brandId", "1a")
+                        .queryParam("applicationDate", "")
+                        .queryParam("productId", "")
+                        .queryParam("brandId", "")
                         .build())
                 .exchange()
                 .expectStatus().isBadRequest()
                 .expectBody(String.class)
                 .value(body -> {
                     assertTrue(body.contains("\"error\":\"Validation Error\""));
-                    assertFalse(body.contains("\"productId\":\"Failed to convert property value of type"));
-                    assertTrue(body.contains("\"brandId\":\"Failed to convert property value of type"));
-                    assertTrue(body.contains("\"applicationDate\":\"Failed to convert property value of type"));
+                    assertTrue(body.contains("\"applicationDate\":\"Application Date cannot be null.\""));
+                    assertTrue(body.contains("\"brandId\":\"Brand ID cannot be null.\""));
+                    assertTrue(body.contains("\"productId\":\"Product ID cannot be null.\""));
                 });
     }
 }

@@ -10,12 +10,12 @@ public record ProductPriceResponse(Long productId, Long brandId, Integer priceLi
 
     public static ProductPriceResponse from(Price price) {
         return new ProductPriceResponse(
-                price.getProductId(),
-                price.getBrand().getBrandId(),
-                price.getPriceList(),
-                price.getStartDate(),
-                price.getEndDate(),
-                price.getPrice()
+                price.productId(),
+                price.brand().brandId(),
+                price.priceList(),
+                price.startDate(),
+                price.endDate(),
+                price.price()
         );
     }
 

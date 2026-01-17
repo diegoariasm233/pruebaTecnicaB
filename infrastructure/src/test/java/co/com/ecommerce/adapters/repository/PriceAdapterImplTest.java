@@ -29,7 +29,7 @@ class PriceAdapterImplTest {
         assertFalse(result.isEmpty());
         assertTrue(result.stream()
                 .allMatch(price ->
-                        price.getProductId().equals(35455L) && price.getBrand().getBrandId().equals(1L)
+                        price.productId().equals(35455L) && price.brand().brandId().equals(1L)
                 )
         );
 
