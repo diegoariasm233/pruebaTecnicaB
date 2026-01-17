@@ -17,7 +17,7 @@
 
 	<properties>
 		<java.version>21</java.version>
-		<parent.version>${version}</parent.version>
+		<parent.version>${project.version}</parent.version>
 	</properties>
 
 	<dependencyManagement>
