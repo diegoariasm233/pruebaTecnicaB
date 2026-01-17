@@ -21,22 +21,24 @@ This project follows the **Hexagonal Architecture** pattern, which allows for a 
 2. Compile the project using Maven:
 
     ```bash
-    mvn clean install
+    ./mvnw clean install
 
 3. Run the application:
 
    If you wish to run the application directly, you can use the following Maven command:
 
     ```bash
-   mvn spring-boot:run -f infrastructure/pom.xml
+   ./mvnw spring-boot:run -f infrastructure/pom.xml
 
 This will start the application, and the H2 database will be initialized with the preconfigured data defined in the data.sql file.
 
 # Running Tests
 
 If you want to run the tests, you can do so with the following command
-    
-    mvn test
+
+```bash
+  ./mvnw clean test
+```
 
 This will execute all the unit and integration tests for the application.
 
