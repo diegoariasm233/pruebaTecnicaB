@@ -3,7 +3,6 @@ package co.com.ecommerce.rest.helper;
 
 import co.com.ecommerce.rest.exception.ErrorResponse;
 import co.com.ecommerce.rest.handler.GlobalExceptionHandler;
-import org.springframework.http.HttpStatus;
 
 import java.util.Map;
 
