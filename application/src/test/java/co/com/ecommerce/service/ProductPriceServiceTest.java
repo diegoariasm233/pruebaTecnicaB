@@ -40,7 +40,7 @@ class ProductPriceServiceTest {
         applicationDate = LocalDateTime.now();
         productId = 1L;
         brandId = 2L;
-        brand = new Brand(1L, "ARTURO CALLE");
+        brand = new Brand(1L, "ARTURO");
         price = new Price(1L, brand,
                 applicationDate.minusDays(1),
                 applicationDate.plusDays(1),

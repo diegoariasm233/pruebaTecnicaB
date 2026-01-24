@@ -25,11 +25,11 @@ class ProductPriceControllerTest {
 
     private static final String BASE_URL = "/api/v1/prices";
 
-    private String buildUrl(String applicationDate, long productId, long brandId) {
+    private String buildUrl(String applicationDate) {
         return UriComponentsBuilder.fromPath(BASE_URL)
                 .queryParam("applicationDate", applicationDate)
-                .queryParam("productId", productId)
-                .queryParam("brandId", brandId)
+                .queryParam("productId", 35455)
+                .queryParam("brandId", 1)
                 .toUriString();
     }
 
@@ -38,7 +38,7 @@ class ProductPriceControllerTest {
         BigDecimal expectedPrice = BigDecimal.valueOf(35.50).setScale(2, RoundingMode.HALF_UP);
 
         ResponseEntity<ProductPriceResponse> response = restTemplate.getForEntity(
-                buildUrl("2020-06-14T10:00:00", 35455, 1),
+                buildUrl("2020-06-14T10:00:00"),
                 ProductPriceResponse.class
         );
 
@@ -53,7 +53,7 @@ class ProductPriceControllerTest {
         BigDecimal expectedPrice = BigDecimal.valueOf(25.45).setScale(2, RoundingMode.HALF_UP);
 
         ResponseEntity<ProductPriceResponse> response = restTemplate.getForEntity(
-                buildUrl("2020-06-14T16:00:00", 35455, 1),
+                buildUrl("2020-06-14T16:00:00"),
                 ProductPriceResponse.class
         );
 
@@ -68,7 +68,7 @@ class ProductPriceControllerTest {
         BigDecimal expectedPrice = BigDecimal.valueOf(35.50).setScale(2, RoundingMode.HALF_UP);
 
         ResponseEntity<ProductPriceResponse> response = restTemplate.getForEntity(
-                buildUrl("2020-06-14T21:00:00", 35455, 1),
+                buildUrl("2020-06-14T21:00:00"),
                 ProductPriceResponse.class
         );
 
@@ -83,7 +83,7 @@ class ProductPriceControllerTest {
         BigDecimal expectedPrice = BigDecimal.valueOf(30.50).setScale(2, RoundingMode.HALF_UP);
 
         ResponseEntity<ProductPriceResponse> response = restTemplate.getForEntity(
-                buildUrl("2020-06-15T10:00:00", 35455, 1),
+                buildUrl("2020-06-15T10:00:00"),
                 ProductPriceResponse.class
         );
 
@@ -98,7 +98,7 @@ class ProductPriceControllerTest {
         BigDecimal expectedPrice = BigDecimal.valueOf(38.95).setScale(2, RoundingMode.HALF_UP);
 
         ResponseEntity<ProductPriceResponse> response = restTemplate.getForEntity(
-                buildUrl("2020-06-16T21:00:00", 35455, 1),
+                buildUrl("2020-06-16T21:00:00"),
                 ProductPriceResponse.class
         );
 
@@ -111,7 +111,7 @@ class ProductPriceControllerTest {
     @Test
     void givenMultiplePrices_whenGetPrice_thenReturnHighestPriority() {
         ResponseEntity<ProductPriceResponse> response = restTemplate.getForEntity(
-                buildUrl("2020-06-14T16:00:00", 35455, 1),
+                buildUrl("2020-06-14T16:00:00"),
                 ProductPriceResponse.class
         );
 
@@ -126,7 +126,7 @@ class ProductPriceControllerTest {
     @Test
     void givenNonExistingPrice_whenGetPrice_thenReturn404() {
         ResponseEntity<ErrorResponse> response = restTemplate.getForEntity(
-                buildUrl("2021-06-16T21:00:00", 35455, 1),
+                buildUrl("2021-06-16T21:00:00"),
                 ErrorResponse.class
         );
 
@@ -139,7 +139,7 @@ class ProductPriceControllerTest {
     @Test
     void givenInvalidParameters_whenGetPrice_thenReturnBadRequest() {
         ResponseEntity<ErrorResponse> response = restTemplate.getForEntity(
-                buildUrl("", 35455, 1),
+                buildUrl(""),
                 ErrorResponse.class
         );
 
@@ -171,14 +171,14 @@ class ProductPriceControllerTest {
     @Test
     void givenBoundaryDates_whenGetPrice_thenReturnCorrectPrice() {
          ResponseEntity<ProductPriceResponse> responseStart = restTemplate.getForEntity(
-                buildUrl("2020-06-14T15:00:00", 35455, 1),
+                buildUrl("2020-06-14T15:00:00"),
                 ProductPriceResponse.class
         );
         assertThat(responseStart.getBody()).isNotNull();
         assertThat(responseStart.getBody().priceList()).isEqualTo(2);
 
         ResponseEntity<ProductPriceResponse> responseEnd = restTemplate.getForEntity(
-                buildUrl("2020-06-14T18:30:00", 35455, 1),
+                buildUrl("2020-06-14T18:30:00"),
                 ProductPriceResponse.class
         );
         assertThat(responseEnd.getBody()).isNotNull();
