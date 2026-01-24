@@ -1,179 +1,187 @@
 package co.com.ecommerce.rest.controller;
 
+import co.com.ecommerce.rest.exception.ErrorResponse;
+import co.com.ecommerce.rest.helper.ErrorResponseAssert;
 import co.com.ecommerce.rest.model.ProductPriceResponse;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.resttestclient.autoconfigure.AutoConfigureRestTestClient;
+import org.springframework.boot.resttestclient.TestRestTemplate;
+import org.springframework.boot.resttestclient.autoconfigure.AutoConfigureTestRestTemplate;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.web.servlet.client.RestTestClient;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.util.UriComponentsBuilder;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-@AutoConfigureRestTestClient
-@ActiveProfiles("test")
+@AutoConfigureTestRestTemplate
 class ProductPriceControllerTest {
 
     @Autowired
-    private RestTestClient restTestClient;
+    private TestRestTemplate restTemplate;
 
-    private final String url = "/api/v1/product-price";
+    private static final String BASE_URL = "/api/v1/prices";
+
+    private String buildUrl(String applicationDate) {
+        return UriComponentsBuilder.fromPath(BASE_URL)
+                .queryParam("applicationDate", applicationDate)
+                .queryParam("productId", 35455)
+                .queryParam("brandId", 1)
+                .toUriString();
+    }
 
     @Test
-    void testGetPriceForProduct_PriceFound10HrsDay14() {
+    void testPrice_10HrsDay14() {
         BigDecimal expectedPrice = BigDecimal.valueOf(35.50).setScale(2, RoundingMode.HALF_UP);
 
-        restTestClient.get()
-                .uri(uriBuilder -> uriBuilder
-                        .path(url)
-                        .queryParam("applicationDate", "2020-06-14T10:00:00")
-                        .queryParam("productId", 35455)
-                        .queryParam("brandId", 1)
-                        .build())
-                .exchange()
-                .expectStatus().isOk()
-                .expectBody(ProductPriceResponse.class)
-                .value(response -> {
-                    assertNotNull(response);
-                    assertEquals(expectedPrice, response.price());
-                });
+        ResponseEntity<ProductPriceResponse> response = restTemplate.getForEntity(
+                buildUrl("2020-06-14T10:00:00"),
+                ProductPriceResponse.class
+        );
+
+        assertThat(response.getStatusCode().is2xxSuccessful()).isTrue();
+        assertThat(response.getBody()).isNotNull();
+        assertThat(response.getBody().price().setScale(2, RoundingMode.HALF_UP))
+                .isEqualByComparingTo(expectedPrice);
     }
 
     @Test
-    void testGetPriceForProduct_PriceFound16HrsDay14() {
-        restTestClient.get()
-                .uri(uriBuilder -> uriBuilder
-                        .path(url)
-                        .queryParam("applicationDate", "2020-06-14T16:00:00")
-                        .queryParam("productId", 35455)
-                        .queryParam("brandId", 1)
-                        .build())
-                .exchange()
-                .expectStatus().isOk()
-                .expectBody(ProductPriceResponse.class)
-                .value(response -> {
-                    assertNotNull(response);
-                    assertEquals(BigDecimal.valueOf(25.45), response.price());
-                });
+    void testPrice_16HrsDay14() {
+        BigDecimal expectedPrice = BigDecimal.valueOf(25.45).setScale(2, RoundingMode.HALF_UP);
+
+        ResponseEntity<ProductPriceResponse> response = restTemplate.getForEntity(
+                buildUrl("2020-06-14T16:00:00"),
+                ProductPriceResponse.class
+        );
+
+        assertThat(response.getStatusCode().is2xxSuccessful()).isTrue();
+        assertThat(response.getBody()).isNotNull();
+        assertThat(response.getBody().price().setScale(2, RoundingMode.HALF_UP))
+                .isEqualByComparingTo(expectedPrice);
     }
 
     @Test
-    void testGetPriceForProduct_PriceFound21HrsDay14() {
+    void testPrice_21HrsDay14() {
         BigDecimal expectedPrice = BigDecimal.valueOf(35.50).setScale(2, RoundingMode.HALF_UP);
 
-        restTestClient.get()
-                .uri(uriBuilder -> uriBuilder
-                        .path(url)
-                        .queryParam("applicationDate", "2020-06-14T21:00:00")
-                        .queryParam("productId", 35455)
-                        .queryParam("brandId", 1)
-                        .build())
-                .exchange()
-                .expectStatus().isOk()
-                .expectBody(ProductPriceResponse.class)
-                .value(response -> {
-                    assertNotNull(response);
-                    assertEquals(expectedPrice, response.price());
-                });
+        ResponseEntity<ProductPriceResponse> response = restTemplate.getForEntity(
+                buildUrl("2020-06-14T21:00:00"),
+                ProductPriceResponse.class
+        );
+
+        assertThat(response.getStatusCode().is2xxSuccessful()).isTrue();
+        assertThat(response.getBody()).isNotNull();
+        assertThat(response.getBody().price().setScale(2, RoundingMode.HALF_UP))
+                .isEqualByComparingTo(expectedPrice);
     }
 
     @Test
-    void testGetPriceForProduct_PriceFound10HrsDay15() {
+    void testPrice_10HrsDay15() {
         BigDecimal expectedPrice = BigDecimal.valueOf(30.50).setScale(2, RoundingMode.HALF_UP);
 
-        restTestClient.get()
-                .uri(uriBuilder -> uriBuilder
-                        .path(url)
-                        .queryParam("applicationDate", "2020-06-15T10:00:00")
-                        .queryParam("productId", 35455)
-                        .queryParam("brandId", 1)
-                        .build())
-                .exchange()
-                .expectStatus().isOk()
-                .expectBody(ProductPriceResponse.class)
-                .value(response -> {
-                    assertNotNull(response);
-                    assertEquals(expectedPrice, response.price());
-                });
+        ResponseEntity<ProductPriceResponse> response = restTemplate.getForEntity(
+                buildUrl("2020-06-15T10:00:00"),
+                ProductPriceResponse.class
+        );
+
+        assertThat(response.getStatusCode().is2xxSuccessful()).isTrue();
+        assertThat(response.getBody()).isNotNull();
+        assertThat(response.getBody().price().setScale(2, RoundingMode.HALF_UP))
+                .isEqualByComparingTo(expectedPrice);
     }
 
     @Test
-    void testGetPriceForProduct_PriceFound21HrsDay16() {
-        restTestClient.get()
-                .uri(uriBuilder -> uriBuilder
-                        .path(url)
-                        .queryParam("applicationDate", "2020-06-16T21:00:00")
-                        .queryParam("productId", 35455)
-                        .queryParam("brandId", 1)
-                        .build())
-                .exchange()
-                .expectStatus().isOk()
-                .expectBody(ProductPriceResponse.class)
-                .value(response -> {
-                    assertNotNull(response);
-                    assertEquals(BigDecimal.valueOf(38.95), response.price());
-                });
+    void testPrice_21HrsDay16() {
+        BigDecimal expectedPrice = BigDecimal.valueOf(38.95).setScale(2, RoundingMode.HALF_UP);
+
+        ResponseEntity<ProductPriceResponse> response = restTemplate.getForEntity(
+                buildUrl("2020-06-16T21:00:00"),
+                ProductPriceResponse.class
+        );
+
+        assertThat(response.getStatusCode().is2xxSuccessful()).isTrue();
+        assertThat(response.getBody()).isNotNull();
+        assertThat(response.getBody().price().setScale(2, RoundingMode.HALF_UP))
+                .isEqualByComparingTo(expectedPrice);
     }
 
     @Test
-    void testGetPriceForProduct_PriceNotFound21HrsDay16Ano21() {
-        restTestClient.get()
-                .uri(uriBuilder -> uriBuilder
-                        .path(url)
-                        .queryParam("applicationDate", "2021-06-16T21:00:00")
-                        .queryParam("productId", 35455)
-                        .queryParam("brandId", 1)
-                        .build())
-                .exchange()
-                .expectStatus().isNotFound()
-                .expectBody(String.class)
-                .value(body ->
-                        assertTrue(body.contains("\"message\":\"No price found for the given parameters."))
-                );
+    void givenMultiplePrices_whenGetPrice_thenReturnHighestPriority() {
+        ResponseEntity<ProductPriceResponse> response = restTemplate.getForEntity(
+                buildUrl("2020-06-14T16:00:00"),
+                ProductPriceResponse.class
+        );
+
+        assertThat(response.getStatusCode().is2xxSuccessful()).isTrue();
+        ProductPriceResponse body = response.getBody();
+        assertThat(body).isNotNull();
+        assertThat(body.price()).isEqualByComparingTo(BigDecimal.valueOf(25.45).setScale(2, RoundingMode.HALF_UP));
+        assertThat(body.priceList()).isEqualTo(2);
+    }
+
+
+    @Test
+    void givenNonExistingPrice_whenGetPrice_thenReturn404() {
+        ResponseEntity<ErrorResponse> response = restTemplate.getForEntity(
+                buildUrl("2021-06-16T21:00:00"),
+                ErrorResponse.class
+        );
+
+        assertThat(response.getStatusCode().value()).isEqualTo(404);
+        assertThat(response.getBody()).isNotNull();
+        ErrorResponseAssert.assertNotFound(response.getBody(),
+                "No price found for the given parameters.");
     }
 
     @Test
-    void testGetPriceForProduct_InvalidParameters() {
-        restTestClient.get()
-                .uri(uriBuilder -> uriBuilder
-                        .path(url)
-                        .queryParam("applicationDate", "")
-                        .queryParam("productId", "35455a")
-                        .queryParam("brandId", "1a")
-                        .build())
-                .exchange()
-                .expectStatus().isBadRequest()
-                .expectBody(String.class)
-                .value(body -> {
-                    assertTrue(body.contains("\"error\":\"Validation Error\""));
-                    assertTrue(body.contains("\"productId\":\"Failed to convert value of type 'java.lang.String' to required type 'java.lang.Long'; For input string: \\\"35455a\\\"\""));
-                    assertTrue(body.contains("\"brandId\":\"Failed to convert value of type 'java.lang.String' to required type 'java.lang.Long'; For input string: \\\"1a\\\"\""));
-                });
+    void givenInvalidParameters_whenGetPrice_thenReturnBadRequest() {
+        ResponseEntity<ErrorResponse> response = restTemplate.getForEntity(
+                buildUrl(""),
+                ErrorResponse.class
+        );
+
+        assertThat(response.getStatusCode().value()).isEqualTo(400);
+        assertThat(response.getBody()).isNotNull();
+        assertThat(response.getBody().fieldErrors()).containsKey("applicationDate");
+
+        ErrorResponseAssert.assertValidationError(response.getBody(),
+                "applicationDate");
     }
 
     @Test
-    void testGetPriceForProduct_Invalid2Parameters() {
-        restTestClient.get()
-                .uri(uriBuilder -> uriBuilder
-                        .path(url)
-                        .queryParam("applicationDate", "")
-                        .queryParam("productId", "")
-                        .queryParam("brandId", "")
-                        .build())
-                .exchange()
-                .expectStatus().isBadRequest()
-                .expectBody(String.class)
-                .value(body -> {
-                    assertTrue(body.contains("\"error\":\"Validation Error\""));
-                    assertTrue(body.contains("\"applicationDate\":\"Application Date cannot be null.\""));
-                    assertTrue(body.contains("\"brandId\":\"Brand ID cannot be null.\""));
-                    assertTrue(body.contains("\"productId\":\"Product ID cannot be null.\""));
-                });
+    void givenAllInvalidParameters_whenGetPrice_thenReturnBadRequest() {
+        String uri = UriComponentsBuilder.fromPath(BASE_URL)
+                .queryParam("applicationDate", "")
+                .queryParam("productId", "")
+                .queryParam("brandId", "")
+                .toUriString();
+
+        ResponseEntity<ErrorResponse> response = restTemplate.getForEntity(uri, ErrorResponse.class);
+
+        assertThat(response.getStatusCode().value()).isEqualTo(400);
+        assertThat(response.getBody()).isNotNull();
+        ErrorResponseAssert.assertValidationError(response.getBody(),
+                "applicationDate", "productId", "brandId");
+    }
+
+
+    @Test
+    void givenBoundaryDates_whenGetPrice_thenReturnCorrectPrice() {
+         ResponseEntity<ProductPriceResponse> responseStart = restTemplate.getForEntity(
+                buildUrl("2020-06-14T15:00:00"),
+                ProductPriceResponse.class
+        );
+        assertThat(responseStart.getBody()).isNotNull();
+        assertThat(responseStart.getBody().priceList()).isEqualTo(2);
+
+        ResponseEntity<ProductPriceResponse> responseEnd = restTemplate.getForEntity(
+                buildUrl("2020-06-14T18:30:00"),
+                ProductPriceResponse.class
+        );
+        assertThat(responseEnd.getBody()).isNotNull();
+        assertThat(responseEnd.getBody().priceList()).isEqualTo(2);
     }
 }
